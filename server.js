@@ -1,4 +1,6 @@
 const express = require('express')
+const glob = require("glob");
+const path = require('path');
 const app = express()
 const fs = require('fs')
 app.use(express.json())
@@ -9,23 +11,24 @@ let date_ob = new Date(ts);
 let date = date_ob.getDate();
 let month = date_ob.getMonth() + 1;
 let year = date_ob.getFullYear();
+let hour=date_ob.getHours();
+let min=date_ob.getMinutes();
+let sec=date_ob.getSeconds();
 
-
-console.log(year + "-" + month + "-" + date);
-const timestamp = year + "-" + month + "-" + date + "_"+ "today date"
-fs.writeFile('date-time.txt',`${timestamp}`,(err) => {
-    if(err) throw err
-    console.log('File Created!!!')
-
-})
+const timestamp =date+"-" + month + "-" +year +"_"+ hour+":"+min+":"+sec+".txt";
+let directory_name = __dirname+"/file";
 app.get('/create',function(req,res){
-    const timestam = "welcome to our file"
-    fs.writeFile('file.txt',`${timestam}`,(err) => {
-        if(err) throw err
-        console.log('File Created successfully!!!')
-    
-    })
+    const directory = path.join(__dirname,'file');
+  fs.writeFileSync(directory+"/"+timestamp,`${date_ob}`);
     res.json(timestamp)
 })
+app.get('/getfilename',function(req,res){
+
+let filenames = fs.readdirSync(directory_name); 
+filenames.forEach((file) => { 
+    console.log("File:", file); 
+}); 
+     res.json(filenames)
+ })
 
 app.listen(3001)
