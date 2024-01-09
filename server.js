@@ -1,5 +1,4 @@
 const express = require('express')
-const glob = require("glob");
 const path = require('path');
 const app = express()
 const fs = require('fs')
@@ -16,8 +15,10 @@ let min=date_ob.getMinutes();
 let sec=date_ob.getSeconds();
 
 const timestamp =date+"-" + month + "-" +year +"_"+ hour+":"+min+":"+sec+".txt";
-let directory_name = __dirname+"/file";
-app.get('/create',function(req,res){
+let directory_name = __dirname+"/file"; 
+console.log("=="+directory_name)
+
+app.post('/create',function(req,res){
     const directory = path.join(__dirname,'file');
   fs.writeFileSync(directory+"/"+timestamp,`${date_ob}`);
     res.json(timestamp)
